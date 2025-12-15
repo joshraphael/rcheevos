@@ -5,6 +5,10 @@
  #undef RC_CLIENT_SUPPORTS_RAINTEGRATION /* Windows required for RAIntegration */
 #endif
 
+#ifndef __GNUC__
+ #undef RC_CLIENT_SUPPORTS_LIBRAINTEGRATION /* Linux required for libraintegration */
+#endif
+
 #include <stdint.h>
 
 #include "rc_export.h"
@@ -56,6 +60,25 @@ typedef void (RC_CCONV *rc_client_raintegration_write_memory_func_t)(uint32_t ad
                                                                      uint32_t num_bytes, rc_client_t* client);
 
 typedef void (RC_CCONV* rc_client_raintegration_get_game_name_func_t)(char* buffer, uint32_t buffer_size, rc_client_t* client);
+
+/* types needed to integrate raintegration */
+
+#ifdef RC_CLIENT_SUPPORTS_LIBRAINTEGRATION
+
+#ifndef RC_CLIENT_SUPPORTS_EXTERNAL
+ #define RC_CLIENT_SUPPORTS_EXTERNAL /* external rc_client required for libraintegration */
+#endif
+
+#include "rc_client.h"
+
+RC_EXPORT rc_client_async_handle_t* RC_CCONV rc_client_begin_load_raintegration(rc_client_t* client,
+    const wchar_t* search_directory, HWND main_window_handle,
+    const char* client_name, const char* client_version,
+    rc_client_callback_t callback, void* callback_userdata);
+
+RC_EXPORT void RC_CCONV rc_client_unload_raintegration(rc_client_t* client)
+
+#endif /* RC_CLIENT_SUPPORTS_LIBRAINTEGRATION */
 
 /* types needed to integrate raintegration */
 
